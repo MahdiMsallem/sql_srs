@@ -2,7 +2,19 @@ import streamlit as st
 import pandas as pd
 import duckdb
 
-st.write("Hello World")
+st.write("""
+# SQL SRS
+Spaced Repetition System SQL practice
+""")
+
+option = st.selectbox(
+    "How would you like to review",
+    ["Joins", "GroupBy", "Windows Functions"],
+    index=None,
+    placeholder="Select a theme"
+)
+
+st.write('You selected', option)
 data = {"a": [1, 2, 3], "b": [4, 5, 6]}
 df = pd.DataFrame(data)
 
@@ -12,7 +24,10 @@ with tab1:
     input_text = st.text_area(label="Entrez votre query")
     st.write("My Table")
     st.dataframe(df)
-    st.write(f"My SQL query is: {input_text}")
+    try:
+        st.write(f"My SQL query is: {input_text}")
     #sql_query = f"{input_text}"
-    result = duckdb.query(input_text).df()
-    st.dataframe(result)
+        result = duckdb.query(input_text).df()
+        st.dataframe(result)
+    except AttributeError:
+        st.write("empty query")
