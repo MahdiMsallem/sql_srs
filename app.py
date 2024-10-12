@@ -46,6 +46,7 @@ df = pd.DataFrame(data)
 st.header("enter your code")
 query = st.text_area(label="votre code sql ici", key="user_input")
 
+<<<<<<< HEAD
 if query:
     result = duckdb.sql(query).df()
     st.dataframe(result)
@@ -62,3 +63,15 @@ with tab2:
 
 with tab3:
     st.write(answer)
+=======
+with tab1:
+    input_text = st.text_area(label="Entrez votre query")
+    st.write("My Table")
+    st.dataframe(df)
+
+st.write(f"My SQL query is: {input_text}")
+#s_query = f"{input_text}"
+result = duckdb.query(input_text).df()
+st.dataframe(result)
+st.write("empty query")
+>>>>>>> 3ed0579 (add side_bar)
