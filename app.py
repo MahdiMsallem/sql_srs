@@ -36,7 +36,12 @@ with st.sidebar:
         placeholder="Select a theme"
     )
     st.write('You selected', option)
+<<<<<<< HEAD
 
+=======
+data = {"a": [1, 2, 3], "b": [4, 5, 6]}
+df = pd.DataFrame(data)
+>>>>>>> 1b77bbd (add side-bar)
 
 st.header("enter your code")
 query = st.text_area(label="votre code sql ici", key="user_input")
