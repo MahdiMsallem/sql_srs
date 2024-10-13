@@ -36,17 +36,12 @@ with st.sidebar:
         placeholder="Select a theme"
     )
     st.write('You selected', option)
-<<<<<<< HEAD
 
-=======
-data = {"a": [1, 2, 3], "b": [4, 5, 6]}
-df = pd.DataFrame(data)
->>>>>>> 1b77bbd (add side-bar)
 
 st.header("enter your code")
 query = st.text_area(label="votre code sql ici", key="user_input")
 
-<<<<<<< HEAD
+
 if query:
     result = duckdb.sql(query).df()
     st.dataframe(result)
@@ -63,15 +58,3 @@ with tab2:
 
 with tab3:
     st.write(answer)
-=======
-with tab1:
-    input_text = st.text_area(label="Entrez votre query")
-    st.write("My Table")
-    st.dataframe(df)
-
-st.write(f"My SQL query is: {input_text}")
-#s_query = f"{input_text}"
-result = duckdb.query(input_text).df()
-st.dataframe(result)
-st.write("empty query")
->>>>>>> 3ed0579 (add side_bar)
