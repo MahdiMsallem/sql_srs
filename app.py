@@ -60,11 +60,14 @@ tab2, tab3 = st.tabs(["Tables", "solution_df"])
 
 with tab2:
     # st.write(exercise.loc[0, "tables"])
-    exercise_tables = exercise.loc[0, "tables"]
-    for table in exercise_tables:
-        st.write(f"table: {table}")
-        df_table = con.execute(f"SELECT * from {table}").df()
-        st.dataframe(df_table)
+    try:
+        exercise_tables = exercise.loc[0, "tables"]
+        for table in exercise_tables:
+            st.write(f"table: {table}")
+            df_table = con.execute(f"SELECT * from {table}").df()
+            st.dataframe(df_table)
+    except KeyError:
+        st.print("Select a theme from the side bar")
 # st.write("table: food_items")
 # st.dataframe(food_items)
 #    st.write("expected")
