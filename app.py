@@ -1,4 +1,5 @@
 # pylint: disable = missing-module-docstring
+# pylint: disable=exec-used
 import logging
 import os
 import duckdb
@@ -11,28 +12,36 @@ if "data" not in os.listdir():
     os.mkdir("data")
 
 if "exercices_sql_tables.duckdb" not in os.listdir("data"):
-    exec(open("init_db.py").read())
+    with open("init_db.py", encoding="utf-8") as exec_file:
+        exec(exec_file.read())
 
 con = duckdb.connect(database="data/exercices_sql_tables.duckdb", read_only=False)
 
 
 with st.sidebar:
+    themes = con.execute("SELECT DISTINCT theme from memory_state")
     theme = st.selectbox(
         "How would you like to review",
-        ["cross_joins", "GroupBy", "window_functions"],
+        themes,
         index=None,
         placeholder="Select a theme",
     )
-    st.write("You selected", theme)
-
-    exercise = con.execute(f"SELECT * from memory_state where theme = '{theme}'").df().sort_values("last_reviewed").reset_index()
+    if theme:
+        st.write("You selected", theme)
+        SELECTED_EXERCISE_QUERY = f"SELECT * from memory_state where theme = '{theme}'"
+    else:
+        st.write("You didn't select a theme yet !!!")
+        SELECTED_EXERCISE_QUERY = "SELECT * from memory_state"
+    exercise = (
+        con.execute(SELECTED_EXERCISE_QUERY)
+        .df()
+        .sort_values("last_reviewed")
+        .reset_index(drop=True)
+    )
     st.write(exercise)
-    try:
-        exercise_name = exercise.loc[0, "exercise_name"]
-        with open(f"answers/{exercise_name}.sql", "r", encoding="utf-8") as f:
-            answer = f.read()
-    except KeyError:
-        st.write("You need to choose a theme")
+    exercise_name = exercise.loc[0, "exercise_name"]
+    with open(f"answers/{exercise_name}.sql", "r", encoding="utf-8") as f:
+        answer = f.read()
 
     solution_df = con.execute(answer).df()
 
@@ -62,14 +71,13 @@ tab2, tab3 = st.tabs(["Tables", "solution_df"])
 
 with tab2:
     # st.write(exercise.loc[0, "tables"])
-    try:
-        exercise_tables = exercise.loc[0, "tables"]
-        for table in exercise_tables:
-            st.write(f"table: {table}")
-            df_table = con.execute(f"SELECT * from {table}").df()
-            st.dataframe(df_table)
-    except KeyError:
-        st.write("Select a theme from the side bar")
+
+    exercise_tables = exercise.loc[0, "tables"]
+    for table in exercise_tables:
+        st.write(f"table: {table}")
+        df_table = con.execute(f"SELECT * from {table}").df()
+        st.dataframe(df_table)
+
 # st.write("table: food_items")
 # st.dataframe(food_items)
 #    st.write("expected")
