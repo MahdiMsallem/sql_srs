@@ -27,10 +27,12 @@ with st.sidebar:
 
     exercise = con.execute(f"SELECT * from memory_state where theme = '{theme}'").df().sort_values("last_reviewed").reset_index()
     st.write(exercise)
-
-    exercise_name = exercise.loc[0, "exercise_name"]
-    with open(f"answers/{exercise_name}.sql", "r", encoding="utf-8") as f:
-        answer = f.read()
+    try:
+        exercise_name = exercise.loc[0, "exercise_name"]
+        with open(f"answers/{exercise_name}.sql", "r", encoding="utf-8") as f:
+            answer = f.read()
+    except KeyError:
+        st.print("You need to choose a theme")
 
     solution_df = con.execute(answer).df()
 
