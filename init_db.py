@@ -11,13 +11,16 @@ con = duckdb.connect(database="data/exercices_sql_tables.duckdb", read_only=Fals
 # ------------------------------------------------------------
 
 data = {
-    "theme": ["cross_joins", "window_functions"],
-    "exercise_name": ["beverages_and_food", "simple_window"],
-    "tables": [["beverages", "food_items"], "simple_window"],
+    "theme": ["cross_joins", "cross_joins"],
+    "exercise_name": ["beverages_and_food", "sizes_and_trademarks"],
+    "tables": [["beverages", "food_items"], ["sizes", "trademarks"]],
     "last_reviewed": ["1980-01-01", "1970-01-01"],
 }
 memory_state_df = pd.DataFrame(data)
-con.execute("CREATE TABLE IF NOT EXISTS memory_state AS SELECT * FROM memory_state_df")
+con.execute(
+    "DROP TABLE IF EXISTS memory_state;\
+            CREATE TABLE memory_state as select * from memory_state_df"
+)
 
 
 # ------------------------------------------------------------
@@ -30,7 +33,10 @@ Expresso,2
 Tea,3
 """
 beverages = pd.read_csv(io.StringIO(CSV))
-con.execute("CREATE TABLE IF NOT EXISTS beverages AS SELECT * FROM beverages")
+con.execute(
+    "DROP TABLE IF EXISTS beverages;\
+            CREATE TABLE beverages as select * from beverages"
+)
 
 CSV2 = """
 food_item,food_price
@@ -39,4 +45,35 @@ chocolatine,2
 muffin,3
 """
 food_items = pd.read_csv(io.StringIO(CSV2))
-con.execute("CREATE TABLE IF NOT EXISTS food_items AS SELECT * FROM food_items")
+con.execute(
+    "DROP TABLE IF EXISTS food_items;\
+            CREATE TABLE food_items as select * from food_items"
+)
+
+CSV3 = """
+size
+XS
+M
+L
+XL
+"""
+sizes = pd.read_csv(io.StringIO(CSV3))
+con.execute(
+    "DROP TABLE IF EXISTS sizes;\
+            CREATE TABLE sizes as select * from sizes"
+)
+
+CSV4 = """
+trademark
+Nike
+Asphalte
+Abercrombie
+Lewis
+"""
+trademarks = pd.read_csv(io.StringIO(CSV4))
+con.execute(
+    "DROP TABLE IF EXISTS trademarks;\
+            CREATE TABLE trademarks as select * from trademarks"
+)
+
+con.close()
