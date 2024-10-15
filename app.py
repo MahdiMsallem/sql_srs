@@ -32,7 +32,7 @@ with st.sidebar:
         with open(f"answers/{exercise_name}.sql", "r", encoding="utf-8") as f:
             answer = f.read()
     except KeyError:
-        st.print("You need to choose a theme")
+        st.write("You need to choose a theme")
 
     solution_df = con.execute(answer).df()
 
@@ -69,7 +69,7 @@ with tab2:
             df_table = con.execute(f"SELECT * from {table}").df()
             st.dataframe(df_table)
     except KeyError:
-        st.print("Select a theme from the side bar")
+        st.write("Select a theme from the side bar")
 # st.write("table: food_items")
 # st.dataframe(food_items)
 #    st.write("expected")
